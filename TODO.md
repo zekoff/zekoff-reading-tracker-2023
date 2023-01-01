@@ -4,5 +4,4 @@
 
 - Add ability to log a note or reflection when completing the day's reading
 - Connect to an actual domain via Firebase Hosting
-- Add timer tracking amount of time page is focused
-- Add toggle for NT books only
+- Add user-facing toggle for NT books only

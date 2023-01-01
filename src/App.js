@@ -69,7 +69,7 @@ async function setReadingComplete(userId, dayNumber) {
   });
 }
 
-function PassageHeading({ dayNumber }) {
+function PassageHeading({ dayNumber, passages }) {
   const weekDisplay = Math.ceil(dayNumber / 5);
   const dayDisplay = dayNumber % 5 || 5;
   const startDate = input_data.data[dayNumber - 1]["Start Date"];
@@ -77,7 +77,7 @@ function PassageHeading({ dayNumber }) {
   return <>
     <Typography variant="body2">Week: {weekDisplay} ({`${startDate} through ${endDate}`})</Typography>
     <Typography variant="body2">Day: {dayDisplay} of 5</Typography>
-    <Typography variant="body2">Passages: {input_data.data[dayNumber - 1]["Passages"]}</Typography>
+    <Typography variant="body2">Passages: {passages}</Typography>
   </>
 }
 
@@ -119,10 +119,11 @@ function App() {
   if (day_number >= 261) {
     return <Typography variant="h1">All readings complete for 2023!</Typography>
   }
-  const passages = input_data.data[day_number - 1]["Passages"];
+  let passages = input_data.data[day_number - 1]["Passages"];
+  if (account["nt_only"]) passages = passages.split(";").pop();
   return (
     <Container>
-      <PassageHeading dayNumber={day_number} />
+      <PassageHeading dayNumber={day_number} passages={passages} />
       <PassageDisplay passageReferences={passages} />
       <Button variant="contained" onClick={() => {
         setReadingComplete(user.uid, day_number);
