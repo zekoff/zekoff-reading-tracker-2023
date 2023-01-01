@@ -87,8 +87,6 @@ function PassageDisplay({ passageReferences }) {
     (async () => {
       if (passageReferences) {
         const apiData = await getPassagesFromEsvApi(passageReferences);
-        console.log(apiData);
-        console.log('Number of passages:', apiData['passages'].length)
         setPassageText(apiData.passages);
       }
     })();
@@ -99,6 +97,7 @@ function PassageDisplay({ passageReferences }) {
 function App() {
   const user = useUser();
   const account = useAccount();
+  const [dailyReadingComplete, setDailyReadingComplete] = useState(false);
   if (user === undefined) return null;
   if (user === null) {
     return <Container>
@@ -109,6 +108,12 @@ function App() {
     </Container>
   }
   if (!account) return null;
+  if (dailyReadingComplete)
+    return <>
+      <Container>
+        <Typography variant="body">Today's reading complete. See you tomorrow!</Typography>
+      </Container>
+    </>
   const day_number = parseInt(account["last_completed_day"]) + 1;
   console.log('day number', day_number);
   if (day_number >= 261) {
@@ -121,6 +126,7 @@ function App() {
       <PassageDisplay passageReferences={passages} />
       <Button variant="contained" onClick={() => {
         setReadingComplete(user.uid, day_number);
+        setDailyReadingComplete(true);
       }}>Reading Complete</Button>
     </Container>
   );
