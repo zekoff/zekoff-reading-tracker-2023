@@ -1,8 +1,10 @@
 # TODO
 
-## Set up API reads
+## General/UI
 
-Remove spaces from input passage references
+- Improve day/weei display (bugged out on a day that is a multiple of 5 right now)
+- Add ability to log a note or reflection when completing the day's reading
+- Connect to an actual domain via Firebase Hosting
 
 ## Finish Firebase Hosting setup/init
 
