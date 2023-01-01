@@ -64,22 +64,41 @@ async function setReadingComplete(userId, dayNumber) {
   await updateDoc(accountRef, {
     last_completed_day: dayNumber
   });
-  await setDoc(doc(getFirestore(), `accounts/${userId}/completed_readings/${dayNumber}`), {
+  await setDoc(doc(getFirestore(), `accounts/${userId}/completed_readings`, String(dayNumber)), {
     completed_timestamp: Date.now()
   });
 }
 
-function PassageHeading({ canonicalPassage, week, day }) {
+function PassageHeading({ dayNumber }) {
+  const weekDisplay = Math.ceil(dayNumber / 5);
+  const dayDisplay = dayNumber % 5 || 5;
+  const startDate = input_data.data[dayNumber - 1]["Start Date"];
+  const endDate = input_data.data[dayNumber - 1]["End Date"]
   return <>
-    <Typography variant="h4">{canonicalPassage}</Typography>
-    <Typography variant="h5">Week: {week}, Day: {day}</Typography>
+    <Typography variant="body2">Week: {weekDisplay} ({`${startDate} through ${endDate}`})</Typography>
+    <Typography variant="body2">Day: {dayDisplay} of 5</Typography>
+    <Typography variant="body2">Passages: {input_data.data[dayNumber - 1]["Passages"]}</Typography>
   </>
+}
+
+function PassageDisplay({ passageReferences }) {
+  const [passageText, setPassageText] = useState(null);
+  useEffect(() => {
+    (async () => {
+      if (passageReferences) {
+        const apiData = await getPassagesFromEsvApi(passageReferences);
+        console.log(apiData);
+        console.log('Number of passages:', apiData['passages'].length)
+        setPassageText(apiData.passages);
+      }
+    })();
+  }, [passageReferences]);
+  return <div dangerouslySetInnerHTML={{ __html: passageText }}></div>
 }
 
 function App() {
   const user = useUser();
   const account = useAccount();
-  const [passageText, setPassageText] = useState('');
   if (user === undefined) return null;
   if (user === null) {
     return <Container>
@@ -98,15 +117,9 @@ function App() {
   const passages = input_data.data[day_number - 1]["Passages"];
   return (
     <Container>
-      <PassageHeading canonicalPassage={passages} week={Math.ceil(day_number / 5)} day={day_number % 5} />
-      <Button onClick={async () => {
-        const apiData = await getPassagesFromEsvApi(passages);
-        console.log(apiData);
-        console.log('Number of passages:', apiData['passages'].length)
-        setPassageText(apiData.passages);
-      }}>Sample Request</Button>
-      <div dangerouslySetInnerHTML={{ __html: passageText }}></div>
-      <Button variant="contained" onClick={()=>{
+      <PassageHeading dayNumber={day_number} />
+      <PassageDisplay passageReferences={passages} />
+      <Button variant="contained" onClick={() => {
         setReadingComplete(user.uid, day_number);
       }}>Reading Complete</Button>
     </Container>
