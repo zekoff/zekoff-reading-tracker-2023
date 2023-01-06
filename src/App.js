@@ -2,7 +2,7 @@ import input_data from './2023_input_data.js';
 import { useEffect, useState } from 'react';
 import { getAuth, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { doc, getFirestore, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
-import { Button, Container, Stack, Typography } from '@mui/material';
+import { Button, Container, Divider, Stack, Typography } from '@mui/material';
 import axios from 'axios';
 
 function useUser() {
@@ -50,7 +50,8 @@ async function getPassagesFromEsvApi(passages) {
         'Authorization': 'Token e93288b94fbf996c1161e3eee7efcabb3bb1906e'
       },
       params: {
-        q: passages
+        q: passages,
+        "include-footnotes": false,
       }
     });
     return response.data;
@@ -78,20 +79,29 @@ function PassageHeading({ dayNumber, passages }) {
     <Typography variant="body2">Week: {weekDisplay} ({`${startDate} through ${endDate}`})</Typography>
     <Typography variant="body2">Day: {dayDisplay} of 5</Typography>
     <Typography variant="body2">Passages: {passages}</Typography>
+    <Divider />
   </>
 }
 
 function PassageDisplay({ passageReferences }) {
-  const [passageText, setPassageText] = useState(null);
+  const [passages, setPassages] = useState([]);
   useEffect(() => {
     (async () => {
       if (passageReferences) {
+        console.log('fetching ESV passages');
         const apiData = await getPassagesFromEsvApi(passageReferences);
-        setPassageText(apiData.passages);
+        setPassages(apiData.passages);
       }
     })();
   }, [passageReferences]);
-  return <div dangerouslySetInnerHTML={{ __html: passageText }}></div>
+  return <>
+    {passages.map((passage, index) => {
+      return <div key={index}>
+        <div dangerouslySetInnerHTML={{ __html: passage }} />
+        <Divider />
+      </div>
+    })}
+  </>;
 }
 
 function App() {
@@ -122,10 +132,10 @@ function App() {
   let passages = input_data.data[day_number - 1]["Passages"];
   if (account["nt_only"]) passages = passages.split(";").pop();
   return (
-    <Container>
+    <Container style={{ userSelect: "none" }}>
       <PassageHeading dayNumber={day_number} passages={passages} />
       <PassageDisplay passageReferences={passages} />
-      <Button variant="contained" onClick={() => {
+      <Button sx={{ m: 3 }} variant="contained" onClick={() => {
         setReadingComplete(user.uid, day_number);
         setDailyReadingComplete(true);
       }}>Reading Complete</Button>
