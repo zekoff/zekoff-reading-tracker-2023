@@ -11,6 +11,4 @@
 - Refactor code
 - Add option to remove footnotes
 - Disable (or remove) "reading complete" button while text is still loading
-- Show loading bar while waiting on ESV API results
-- Fetch passages in App scope, not inside PassageDisplay. Move passage cache/state to App scope, pass as prop to PassageDisplay
 - Add test cases
