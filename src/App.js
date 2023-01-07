@@ -99,7 +99,7 @@ function App() {
   const [passageFullTexts, setPassageFullTexts] = useState(null);
   const [dailyReadingComplete, setDailyReadingComplete] = useState(false);
   useEffect(() => {
-    if (account?.["last_completed_day"]) {
+    if (account?.["last_completed_day"] !== 'undefined') {
       const dayNumber = parseInt(account["last_completed_day"]) + 1
       let passageReferences = input_data.data[dayNumber - 1]["Passages"];
       if (account["nt_only"]) passageReferences = passageReferences.split(";").pop();
@@ -111,6 +111,7 @@ function App() {
   }, [account]);
   useEffect(() => {
     if (readingAssignment) {
+      console.log('Reading assignment: ', readingAssignment);
       (async () => {
         const apiData = await getPassagesFromEsvApi(readingAssignment.passageReferences);
         setPassageFullTexts(apiData.passages);
