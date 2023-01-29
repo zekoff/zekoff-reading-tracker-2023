@@ -14,7 +14,7 @@ Gen 26-27; Mark 10,10,2,8-Jan-2023,14-Jan-2023
 Genesis 28-29; Mark 11,11,3,15-Jan-2023,21-Jan-2023
 Gen 30-31; Psalm 11; Mark 12,12,3,15-Jan-2023,21-Jan-2023
 Gen 32-34; Psalm 145; Mark 13,13,3,15-Jan-2023,21-Jan-2023
-Gen 35-37; Psalm 12; Mark 14;,14,3,15-Jan-2023,21-Jan-2023
+Gen 35-37; Psalm 12; Mark 14,14,3,15-Jan-2023,21-Jan-2023
 Gen 38-40; Mark 15,15,3,15-Jan-2023,21-Jan-2023
 Genesis 41-42; Mark 16,16,4,22-Jan-2023,28-Jan-2023
 Gen 43-44; Psalm 24; Galatians 1,17,4,22-Jan-2023,28-Jan-2023
