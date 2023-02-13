@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getAuth, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { doc, getFirestore, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import axios from 'axios';
+import getWeek from 'date-fns/getWeek';
 
 export function useUser() {
   const [user, setUser] = useState(undefined);
@@ -68,4 +69,8 @@ export async function setReadingComplete(userId, dayNumber) {
   await setDoc(doc(getFirestore(), `accounts/${userId}/completed_readings`, String(dayNumber)), {
     completed_timestamp: Date.now()
   });
+}
+
+export function getCurrentWeekOfYear() {
+  return getWeek(new Date());
 }

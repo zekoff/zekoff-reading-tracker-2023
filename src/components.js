@@ -1,6 +1,6 @@
 import input_data from './2023_input_data.js';
 import { Typography, Divider, Container, Stack, Button } from '@mui/material';
-import { googleSignIn } from './utilFunctions.js';
+import { getCurrentWeekOfYear, googleSignIn } from './utilFunctions.js';
 import { getAuth } from 'firebase/auth';
 
 export function SignInPrompt() {
@@ -26,11 +26,16 @@ export function PlanCompleteBanner() {
 
 export function PassageHeading({ dayNumber, passageReferences }) {
   const weekDisplay = Math.ceil(dayNumber / 5);
+  const weekDelta = getCurrentWeekOfYear() - weekDisplay;
   const dayDisplay = dayNumber % 5 || 5;
   const startDate = input_data.data[dayNumber - 1]["Start Date"];
   const endDate = input_data.data[dayNumber - 1]["End Date"]
   return <>
     <Typography variant="body2">Week: {weekDisplay} ({`${startDate} through ${endDate}`})</Typography>
+    {weekDelta > 0 ?
+      <Typography variant="body2" sx={{color: "orange"}}>{weekDelta} week(s) behind schedule!</Typography>
+      : null
+    }
     <Typography variant="body2">Day: {dayDisplay} of 5</Typography>
     <Typography variant="body2">Passages: {passageReferences}</Typography>
     <Divider />
