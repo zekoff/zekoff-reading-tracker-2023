@@ -40,7 +40,7 @@ function App() {
   if (user === undefined) return null; // waiting on login
   if (user === null) return <SignInPrompt /> // user is not signed in
   if (!account || !readingAssignment) return <LinearProgress />; // waiting on Firestore results
-  if (dailyReadingComplete) return <ReadingCompleteBanner />;
+  if (dailyReadingComplete) return <ReadingCompleteBanner daysComplete={readingAssignment?.dayNumber - 1} />;
   if (readingAssignment?.dayNumber >= 261) return <PlanCompleteBanner />
 
   return (

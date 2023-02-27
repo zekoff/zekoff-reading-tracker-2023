@@ -2,6 +2,7 @@ import input_data from './2023_input_data.js';
 import { Typography, Divider, Container, Stack, Button } from '@mui/material';
 import { getCurrentWeekOfYear, googleSignIn } from './utilFunctions.js';
 import { getAuth } from 'firebase/auth';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export function SignInPrompt() {
   return <Container>
@@ -12,9 +13,18 @@ export function SignInPrompt() {
   </Container>
 }
 
-export function ReadingCompleteBanner() {
+export function ReadingCompleteBanner({ daysComplete = null }) {
+  const daysCompleteThisWeek = daysComplete % 5 || 5;
+  const daysLeft = 5 - daysCompleteThisWeek;
+  const checkmarks = [];
+  checkmarks.push(Array(daysCompleteThisWeek).fill(<CheckCircleIcon sx={{ color: "green" }} />));
+  checkmarks.push(Array(daysLeft).fill(<CheckCircleIcon sx={{ color: "gray" }} />))
   return <Container sx={{ p: 3 }}>
     <Typography variant="body">Today's reading complete. See you tomorrow!</Typography>
+    <hr />
+    {daysComplete ?
+      <Typography variant="body">Readings complete this week: {checkmarks}</Typography>
+      : null}
   </Container>
 }
 
@@ -33,8 +43,10 @@ export function PassageHeading({ dayNumber, passageReferences }) {
   return <>
     <Typography variant="body2">Week: {weekDisplay} ({`${startDate} through ${endDate}`})</Typography>
     {weekDelta > 0 ?
-      <Typography variant="body2" sx={{color: "orange"}}>{weekDelta} week(s) behind schedule!</Typography>
-      : null
+      <Typography variant="body2" sx={{ color: "orange" }}>{weekDelta} week(s) behind schedule!</Typography>
+      : weekDelta < 0 ?
+        <Typography variant="body2" sx={{ color: "green" }}>Ahead of schedule!</Typography>
+        : null
     }
     <Typography variant="body2">Day: {dayDisplay} of 5</Typography>
     <Typography variant="body2">Passages: {passageReferences}</Typography>
